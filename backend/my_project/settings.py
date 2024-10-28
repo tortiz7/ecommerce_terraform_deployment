@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-*7!!kc@bmtx8ngui6lr@xmifmcwm6y%hnbe)rdei(b!ds8t)uq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] # add the private ip of where you've placed this Django app
+# add the private ip of where you've placed this Django app
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -85,14 +86,14 @@ WSGI_APPLICATION = 'my_project.wsgi.application'
 
 DATABASES = {
     'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'your_db_name',
-#        'USER': 'your_username',
-#        'PASSWORD': 'your_password',
-#        'HOST': 'your-rds-endpoint.amazonaws.com',
-#        'PORT': '5432',
-#    }, 
-#    'sqlite': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'your_db_name',
+        'USER': 'your_username',
+        'PASSWORD': 'your_password',
+        'HOST': 'your-rds-endpoint.amazonaws.com',
+        'PORT': '5432',
+    }, 
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
