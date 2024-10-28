@@ -5,6 +5,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 urlpatterns = [
 
+    # Add ALB health check endpoint
+    path('health/', views.health_check, name='health-check'),
+
     # user
     path('register/', views.UserRegisterView.as_view(), name="register-page"),
     path('login/', views.MyTokenObtainPairView.as_view(), name="login-page"),

@@ -20,6 +20,11 @@ from .serializers import (
 )
 
 
+# Health check for ALB
+
+def health_check(request):
+    return JsonResponse({"status": "healthy"})
+
 # register user
 class UserRegisterView(APIView):
     """To Register the User"""
