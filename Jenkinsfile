@@ -59,14 +59,10 @@ pipeline {
         }
         stage('Plan') {
             steps {
-               script {
-            echo "Using TFVARS file: ${tf_vars_path}"
-            sh 'ls -la Terraform' // List files in the Terraform directory
-               }
-                withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
+                dir('Terraform') {
+                    withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
                                  string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key'),
                                  file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                    dir('Terraform') {
                         sh 'terraform plan -var-file=${TFVARS} -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"' 
                     }
                 }
