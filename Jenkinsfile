@@ -61,8 +61,8 @@ pipeline {
             steps {
                 dir('Terraform') {
                     withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
-                                 string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key'),
-                                 file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
+                                    string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key'),
+                                    file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
                         sh 'terraform plan -var-file=${TFVARS} -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"' 
                     }
                 }
