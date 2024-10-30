@@ -1,10 +1,10 @@
- variable access_key{
+ variable aws_access_key{
     type = string
     sensitive = true
 
  }                                                    # Replace with your AWS access key ID (leave empty if using IAM roles or env vars)
  
- variable secret_key{
+ variable aws_secret_key{
     type = string
     sensitive = true
 
