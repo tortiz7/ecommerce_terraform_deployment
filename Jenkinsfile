@@ -16,6 +16,7 @@ pipeline {
             cd frontend
             sed -i "s|http://private_ec2_ip:8000|http://${private_ip}:8000|" package.json
             npm i
+            export NODE_OPTIONS=--openssl-legacy-provider
             npm start
             '''
           }
