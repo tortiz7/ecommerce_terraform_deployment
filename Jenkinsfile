@@ -57,28 +57,35 @@ pipeline {
                 }
             }
         }
-           stage('Terraform Destroy') {
-         steps {
-           withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
-                        string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')]) {
-                            dir('Terraform') {
-                            withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                              sh 'terraform destroy -auto-approve -var="access_key=${access_key}" -var="secret_key=${secret_key}" -var="tf_vars=${TFVARS}"' 
-                            }
-          }
+        stage('Terraform Destroy') {
+            steps {
+                withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
+                                 string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')]) {
+                    dir('Terraform') {
+                        withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
+                            sh '''
+                            terraform destroy -auto-approve \
+                                -var="access_key=${aws_access_key}" \
+                                -var="secret_key=${aws_secret_key}" \
+                                -var="tf_vars=${TFVARS}"
+                            '''
+                        }
+                    }
+                }
+            }
         }
-      }
         stage('Plan') {
             steps {
                 withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
                                  string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')]) {
                     dir('Terraform') {
                         withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                            script {
-                                sh '''
-                                terraform plan -var-file=${TFVARS} -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"
-                                '''
-                            }
+                            sh '''
+                            terraform plan -var-file=${TFVARS} \
+                                -out plan.tfplan \
+                                -var="aws_access_key=${aws_access_key}" \
+                                -var="aws_secret_key=${aws_secret_key}"
+                            '''
                         }
                     }
                 }
