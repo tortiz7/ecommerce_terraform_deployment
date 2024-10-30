@@ -11,8 +11,7 @@ pipeline {
             parallel {
                 stage('Build Frontend') {
                     steps {
-                        sh ''' 
-                        #!/bin/bash
+                        sh '''#!/bin/bash
                         curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
                         sudo apt install -y nodejs
                         cd frontend
@@ -23,10 +22,9 @@ pipeline {
                         '''
                     }
                 }
-                stage('Build Backend') {
+                 stage('Build Backend') {
                     steps {
-                        sh '''
-                        #!/bin/bash
+                        sh '''#!/bin/bash
                         sudo add-apt-repository ppa:deadsnakes/ppa -y
                         sudo apt update -y
                         sudo apt install -y python3.9 python3.9-venv python3.9-dev python3-pip
@@ -40,7 +38,6 @@ pipeline {
                 }
             }
         }
-
         stage('Test') {
             steps {
                 sh ''' 
