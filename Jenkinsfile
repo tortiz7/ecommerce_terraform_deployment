@@ -65,7 +65,7 @@ pipeline {
                         withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
                             script {
                                 sh '''
-                                terraform plan -var-file=${TFVARS} -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}""
+                                terraform plan -var-file=${TFVARS} -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"
                                 '''
                             }
                         }
