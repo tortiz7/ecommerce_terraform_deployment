@@ -57,6 +57,17 @@ pipeline {
                 }
             }
         }
+        stage('Terraform Destroy') {
+         steps {
+           withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'access_key'), 
+                        string(credentialsId: 'AWS_SECRET_KEY', variable: 'secret_key'),
+                        string(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
+                            dir('Terraform') {
+                              sh 'terraform destroy -auto-approve -var="access_key=${access_key}" -var="secret_key=${secret_key}" -var-file="tf_vars=${TF_VARS}"' 
+                            }
+          }
+        }
+      }
         stage('Plan') {
             steps {
                 withCredentials([
@@ -70,22 +81,9 @@ pipeline {
                                 terraform plan -var-file=${TFVARS} -out plan.tfplan \
                                 -var="aws_access_key=${aws_access_key}" \
                                 -var="aws_secret_key=${aws_secret_key}"
-
-                                 terraform plan -var-file=${TFVARS} -destroy plan2.tfplan \
-                                -var="aws_access_key=${aws_access_key}" \
-                                -var="aws_secret_key=${aws_secret_key}"
                                 '''
                             }
                         }
-                    }
-                }
-            }
-        }
-        stage('Destroy') {
-            steps {
-                dir('Terraform') {
-                    withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                        sh "terraform apply plan2.tfplan"
                     }
                 }
             }
