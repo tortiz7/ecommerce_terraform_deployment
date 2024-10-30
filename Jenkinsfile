@@ -77,7 +77,7 @@ pipeline {
             steps {
                 dir('Terraform') {
                     withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                        sh "terraform apply -var-file=${TFVARS} plan.tfplan"
+                        sh "terraform apply plan.tfplan"
                     }
                 }
             }
