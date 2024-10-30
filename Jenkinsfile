@@ -4,7 +4,6 @@ pipeline {
         backend_dir = 'backend'
         frontend_dir = 'frontend'
         private_ip = "172.31.36.167"
-        tf_vars_path = ' '
     }
     stages {
         stage('Build') {
@@ -53,9 +52,6 @@ pipeline {
             steps {
                 dir('Terraform') {
                     withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                        script {
-                            tf_vars_path = "${TFVARS}"
-                        }
                         sh 'terraform init'
                     }
                 }
@@ -71,7 +67,7 @@ pipeline {
                                  string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key'),
                                  file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
                     dir('Terraform') {
-                        sh 'terraform plan -var-file=${tf_vars_path} -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"' 
+                        sh 'terraform plan -var-file=${TFVARS} -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"' 
                     }
                 }
             }
@@ -80,7 +76,7 @@ pipeline {
             steps {
                 dir('Terraform') {
                     withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                        sh 'terraform apply -var-file=${tf_vars_path} plan.tfplan' 
+                        sh 'terraform apply -var-file=${TFVARS} plan.tfplan' 
                     }    
                 }
             }
