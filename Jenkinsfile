@@ -51,7 +51,9 @@ pipeline {
     stage('Init') {
       steps {
         dir('Terraform') {
-          sh 'cd /home/ubuntu/TF_WL5 && sudo terraform init' 
+          sh 'echo "Current directory:" && pwd'
+          sh 'echo "Listing /home/ubuntu:" && ls -l /home/ubuntu/'
+          sh 'cd /home/ubuntu/TF_WL5 && echo "Changed directory to TF_WL5"'
         }
       }
     }
