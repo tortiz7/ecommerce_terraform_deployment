@@ -30,7 +30,7 @@ pipeline {
             python3.9 -m venv venv
             source venv/bin/activate
             pip install -r backend/requirements.txt
-            sed -i "s|ALLOWED_HOSTS = \\[\\]|ALLOWED_HOSTS = \\[\"${private_ip}\"\\]|" backend/my_project/settings.py
+             sed -i "s|ALLOWED_HOSTS = \\[\\]|ALLOWED_HOSTS = [\\"${private_ip}\\"]|" backend/my_project/settings.py
             python3 backend/manage.py runserver 0.0.0.0:8000
             '''
           }
