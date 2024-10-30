@@ -52,7 +52,7 @@ pipeline {
             steps {
                 dir('Terraform') {
                     withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                        sh 'terraform init'
+                        sh 'terraform init -var-file="tf_vars=${TF_VARS}"'
                     }
                 }
             }
