@@ -61,7 +61,7 @@ pipeline {
          steps {
            withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'access_key'), 
                         string(credentialsId: 'AWS_SECRET_KEY', variable: 'secret_key'),
-                        string(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
+                        file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
                             dir('Terraform') {
                               sh 'terraform destroy -auto-approve -var="access_key=${access_key}" -var="secret_key=${secret_key}" -var-file="tf_vars=${TF_VARS}"' 
                             }
