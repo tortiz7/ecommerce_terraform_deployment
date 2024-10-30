@@ -70,6 +70,10 @@ pipeline {
                                 terraform plan -var-file=${TFVARS} -out plan.tfplan \
                                 -var="aws_access_key=${aws_access_key}" \
                                 -var="aws_secret_key=${aws_secret_key}"
+
+                                 terraform plan -var-file=${TFVARS} -destroy plan2.tfplan \
+                                -var="aws_access_key=${aws_access_key}" \
+                                -var="aws_secret_key=${aws_secret_key}"
                                 '''
                             }
                         }
@@ -81,7 +85,7 @@ pipeline {
             steps {
                 dir('Terraform') {
                     withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                        sh "terraform destroy plan.tfplan"
+                        sh "terraform apply plan2.tfplan"
                     }
                 }
             }
