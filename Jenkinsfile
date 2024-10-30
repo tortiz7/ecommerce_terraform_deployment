@@ -68,7 +68,8 @@ pipeline {
             sh 'ls -la Terraform' // List files in the Terraform directory
                }
                 withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'aws_access_key'), 
-                                 string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key')]) {
+                                 string(credentialsId: 'AWS_SECRET_KEY', variable: 'aws_secret_key'),
+                                 file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
                     dir('Terraform') {
                         sh 'terraform plan -var-file=${tf_vars_path} -out plan.tfplan -var="aws_access_key=${aws_access_key}" -var="aws_secret_key=${aws_secret_key}"' 
                     }
@@ -78,7 +79,9 @@ pipeline {
         stage('Apply') {
             steps {
                 dir('Terraform') {
-                    sh 'terraform apply -var-file=${tf_vars_path} plan.tfplan' 
+                    withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
+                        sh 'terraform apply -var-file=${tf_vars_path} plan.tfplan' 
+                    }    
                 }
             }
         }
