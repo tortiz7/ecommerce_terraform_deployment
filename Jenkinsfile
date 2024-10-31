@@ -52,22 +52,30 @@ pipeline {
             steps {
                 dir('Terraform') {
                     withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                        sh 'terraform init -var-file="tf_vars=${TF_VARS}"'
+                        sh 'terraform init -var-file="${TFVARS}"'
                     }
                 }
             }
         }
         stage('Terraform Destroy') {
-         steps {
-           withCredentials([string(credentialsId: 'AWS_ACCESS_KEY', variable: 'access_key'), 
-                        string(credentialsId: 'AWS_SECRET_KEY', variable: 'secret_key'),
-                        file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                            dir('Terraform') {
-                              sh 'terraform destroy -auto-approve -var="access_key=${access_key}" -var="secret_key=${secret_key}" -var-file="tf_vars=${TF_VARS}"' 
-                            }
-          }
+            steps {
+                withCredentials([
+                    string(credentialsId: 'AWS_ACCESS_KEY', variable: 'access_key'), 
+                    string(credentialsId: 'AWS_SECRET_KEY', variable: 'secret_key')
+                ]) {
+                    dir('Terraform') {
+                        withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
+                            sh '''
+                            terraform destroy -auto-approve \
+                            -var="access_key=${access_key}" \
+                            -var="secret_key=${secret_key}" \
+                            -var-file="${TFVARS}"
+                            '''
+                        }
+                    }
+                }
+            }
         }
-      }
         stage('Plan') {
             steps {
                 withCredentials([
@@ -76,13 +84,11 @@ pipeline {
                 ]) {
                     dir('Terraform') {
                         withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                            script {
-                                sh '''
-                                terraform plan -var-file=${TFVARS} -out plan.tfplan \
-                                -var="aws_access_key=${aws_access_key}" \
-                                -var="aws_secret_key=${aws_secret_key}"
-                                '''
-                            }
+                            sh '''
+                            terraform plan -var-file=${TFVARS} -out plan.tfplan \
+                            -var="aws_access_key=${aws_access_key}" \
+                            -var="aws_secret_key=${aws_secret_key}"
+                            '''
                         }
                     }
                 }
@@ -92,7 +98,7 @@ pipeline {
             steps {
                 dir('Terraform') {
                     withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
-                        sh "terraform apply plan.tfplan"
+                        sh 'terraform apply plan.tfplan'
                     }
                 }
             }
