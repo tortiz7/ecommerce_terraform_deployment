@@ -66,6 +66,7 @@ pipeline {
                     dir('Terraform') {
                         withCredentials([file(credentialsId: 'tf_vars', variable: 'TFVARS')]) {
                             sh '''
+                            cd Terraform
                             terraform destroy -auto-approve \
                             -var="access_key=${access_key}" \
                             -var="secret_key=${secret_key}" \
