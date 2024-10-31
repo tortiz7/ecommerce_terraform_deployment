@@ -1244,28 +1244,24 @@ sudo systemctl restart prometheus
 ---
 ## Issues/Troubleshooting
 ### Issue with AWS Credentials in Jenkins for Terraform
-**Problem:** Jenkins could not authenticate with AWS because AWS credentials weren’t correctly set up.
-**Solution:** Added AWS Access Key and Secret Key to Jenkins Credential Manager. Referenced these credentials in the Jenkinsfile to pass them securely to Terraform commands.
+Problem: Jenkins could not authenticate with AWS because AWS credentials weren’t correctly set up.
 
-Variable Passing in Terraform
-**Problem:** Terraform initially failed to find the required variables, especially for the destroy command.
-**Solution:** Specified var-file in Terraform commands and used terraform.tfvars files to standardize variable inputs across environments.
+Solution: Added AWS Access Key and Secret Key to Jenkins Credential Manager. Referenced these credentials in the Jenkinsfile to pass them securely to Terraform commands.
 
-RDS Database Migration from SQLite to PostgreSQL
-**Problem:** Transitioning from SQLite (local, file-based) to PostgreSQL (networked, RDS-hosted) required configuration changes and data migration.
-**Solution:** Updated Django’s settings.py to use PostgreSQL, adjusted database URL settings, and used pg_dump and pg_restore for smooth data migration.
+**Variable Passing in Terraform**
+Problem: Terraform initially failed to find the required variables, especially for the destroy command.
 
-Prometheus and Node Exporter Configurations
+Solution: Specified var-file in Terraform commands and used terraform.tfvars files via Jenkins Credential Manager to standardize variable inputs across environments.
+
+**Prometheus and Node Exporter Configurations**
 Problem: Configuration issues in Prometheus, especially with incorrectly formatted prometheus.yml, led to repeated startup failures.
+
 Solution: Debugged YAML syntax carefully, corrected indentation, and tested configurations to confirm Prometheus could successfully access backend server metrics.
 
-Load Balancer Target Registration
-Problem: Backend servers were not automatically added to the Application Load Balancer, affecting load distribution.
-Solution: Added aws_alb_target_group_attachment resources in Terraform to attach instances dynamically, ensuring they are reachable by the load balancer.
+**Load Balancer Target Registration**
+Problem: Frontend servers were not being added to the Application Load Balancer, so I could not access the application via the ALB DNS. 
 
-EC2 Instance Count and Load Balancer Configuration
-Problem: Incorrect instance count and subnet distribution affected performance and failover reliability.
-Solution: Used the count parameter with dynamic assignments, spreading instances across Availability Zones to enhance redundancy and availability.
+Solution: Added aws_alb_target_group_attachment resources in Terraform to attach frontend instances dynamically, ensuring they are reachable by the load balancer.
 
 ---
 
