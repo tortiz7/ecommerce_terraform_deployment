@@ -31,7 +31,6 @@ module "EC2"{
   alb_sg_id = module.ALB.alb_sg_id
   frontend_port = var.frontend_port
 
-
 }
 
 module "RDS"{
